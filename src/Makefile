@@ -22,19 +22,14 @@
 #  the GNU General Public License.
 # ---------------------------------------------------------------------------
 
+CXX			= g++ -std=c++17 -Wall
+INCLUDES	= -I .
+CXXFLAGS	= #-D__linux__
 
-FF_ROOT = /usr/local/include/fastflow
+LDFLAGS 	= -lsdsl
+OPTFLAGS	= -O3 #-DNDEBUG
 
-CXX			= g++ -std=c++14 -Wall
-INCLUDES	= -I . -I $(FF_ROOT)
-CXXFLAGS	= -DLINUX_MACHINE
-
-LDFLAGS 	= -pthread
-OPTFLAGS	= -O3 -march=native #-DNDEBUG
-
-TARGETS 	= seq	\
-              par	\
-              ff
+TARGETS 	= main
 
 .PHONY: all clean cleanall
 .SUFFIXES: .cpp
@@ -43,9 +38,6 @@ TARGETS 	= seq	\
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTFLAGS) -o $@ $< $(LDFLAGS)
 
 all: $(TARGETS)
-
-par: par.cpp barrier.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTFLAGS) barrier.cpp -o $@ $< $(LDFLAGS)
 
 clean:
 	rm -f $(TARGETS)
