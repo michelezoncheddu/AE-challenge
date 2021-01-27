@@ -39,6 +39,8 @@ template <typename T> std::vector<T> read_data_binary(const std::string &path) {
         size_t size = 0;
         in.read((char *)&size, sizeof(T));
 
+        size /= 10000;
+
         std::vector<T> data(size);
         in.read((char *)data.data(), size * sizeof(T));
         return data;

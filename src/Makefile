@@ -22,6 +22,8 @@
 #  the GNU General Public License.
 # ---------------------------------------------------------------------------
 
+DATA_PATH   = ../datasets/weblogs_714M
+
 CXX			= g++ -std=c++17 -Wall
 INCLUDES	= -I .
 CXXFLAGS	= #-D__linux__
@@ -31,13 +33,16 @@ OPTFLAGS	= -O3 #-DNDEBUG
 
 TARGETS 	= main
 
-.PHONY: all clean cleanall
+.PHONY: all run clean cleanall
 .SUFFIXES: .cpp
 
 %: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTFLAGS) -o $@ $< $(LDFLAGS)
 
 all: $(TARGETS)
+
+run:
+	./$(TARGETS) $(DATA_PATH)
 
 clean:
 	rm -f $(TARGETS)
