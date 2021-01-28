@@ -5,9 +5,8 @@
 #include <random>
 #include <vector>
 
-#include <sdsl/bit_vectors.hpp>
-
 #include "index.hpp"
+//#include "vanilla_index.hpp"
 
 #ifdef __linux__
 #include <sched.h>
@@ -39,7 +38,7 @@ template <typename T> std::vector<T> read_data_binary(const std::string &path) {
         size_t size = 0;
         in.read((char *)&size, sizeof(T));
 
-        size /= 10000;
+        size /= 1000;
 
         std::vector<T> data(size);
         in.read((char *)data.data(), size * sizeof(T));
@@ -93,8 +92,6 @@ void test(const MyIndex &index, const std::vector<uint64_t> &data, const std::st
 
 int main(int argc, char **argv) {
     std::cout << "dataset,nanoseconds,bytes" << std::endl;
-
-    sdsl::sd_vector<> ef;
 
     for (int argi = 1; argi < argc; ++argi) {
         auto path = std::string(argv[argi]);

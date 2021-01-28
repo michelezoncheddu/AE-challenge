@@ -22,7 +22,7 @@
 #  the GNU General Public License.
 # ---------------------------------------------------------------------------
 
-DATA_PATH   = ../datasets/weblogs_714M
+DATA_PATH   = ../datasets/books_800M
 
 CXX			= g++ -std=c++17 -Wall
 INCLUDES	= -I .
@@ -36,7 +36,7 @@ TARGETS 	= main
 .PHONY: all run clean cleanall
 .SUFFIXES: .cpp
 
-%: %.cpp
+%: %.cpp index.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTFLAGS) -o $@ $< $(LDFLAGS)
 
 all: $(TARGETS)
