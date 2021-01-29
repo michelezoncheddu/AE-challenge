@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "index.hpp"
-//#include "vanilla_index.hpp"
 
 #ifdef __linux__
 #include <sched.h>
@@ -38,7 +37,7 @@ template <typename T> std::vector<T> read_data_binary(const std::string &path) {
         size_t size = 0;
         in.read((char *)&size, sizeof(T));
 
-        size /= 1000;
+        //size /= 1000;
 
         std::vector<T> data(size);
         in.read((char *)data.data(), size * sizeof(T));
@@ -63,7 +62,11 @@ size_t query_time(const MyIndex &index, const std::vector<uint64_t> &queries) {
 
 void test(const MyIndex &index, const std::vector<uint64_t> &data, const std::string &name) {
     // Lookup test
-    for (size_t i = 0; i < data.size(); ++i) {
+    size_t progress = data.size() / 100;
+    for (size_t i = data.size() / 2; i < data.size(); ++i) {
+        if (i % progress == 0)
+            std::cout << "Lookup: " << i / progress << "%" << std::endl;
+
         if (i > 0 && data[i] == data[i - 1])
             continue;
         auto q = data[i];
@@ -78,7 +81,13 @@ void test(const MyIndex &index, const std::vector<uint64_t> &data, const std::st
     // nextGEQ test
     std::uniform_int_distribution<uint64_t> distribution(data.front(), data.back() - 2);
     std::mt19937 g(42);
-    for (size_t i = 0; i < 15000000; ++i) {
+
+    const size_t n_iter = 15000000;
+    progress = n_iter / 100;
+    for (size_t i = 0; i < n_iter; ++i) {
+        if (i % progress == 0)
+            std::cout << "nextGEQ: " << i / progress << "%" << std::endl;
+
         auto q = distribution(g);
         auto correct = *std::lower_bound(data.begin(), data.end(), q);
         auto returned = index.nextGEQ(q);
@@ -97,11 +106,23 @@ int main(int argc, char **argv) {
         auto path = std::string(argv[argi]);
         auto name = path.substr(path.find_last_of("/\\") + 1);
         auto data = read_data_binary<uint64_t>(path);
+//        std::vector<uint64_t> data = {1, 4, 7, 18, 24, 26, 30, 31, 31, 50, 51};
 
+        std::cout << "Creating index" << std::endl;
         MyIndex index(data);
+        std::cout << "Index ready, " << index.size_in_bytes() << std::endl;
+
+//        uint64_t input;
+//        while (true) {
+//            std::cin >> input;
+//            std::cout << index.nextGEQ(input) << std::endl;
+//        }
+//        return 0;
 
         set_affinity();
         test(index, data, name);
+
+        return 0;
 
         // Benchmark
         std::vector<uint64_t> queries(10000000);

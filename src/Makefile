@@ -22,7 +22,9 @@
 #  the GNU General Public License.
 # ---------------------------------------------------------------------------
 
+#DATA_PATH   = ../datasets/weblogs_714M
 DATA_PATH   = ../datasets/books_800M
+DATA_PATH   = ../datasets/osm_cellids_800M
 
 CXX			= g++ -std=c++17 -Wall
 INCLUDES	= -I .
