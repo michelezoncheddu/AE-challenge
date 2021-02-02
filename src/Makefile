@@ -22,9 +22,8 @@
 #  the GNU General Public License.
 # ---------------------------------------------------------------------------
 
-#DATA_PATH   = ../datasets/weblogs_714M
-DATA_PATH   = ../datasets/books_800M
-DATA_PATH   = ../datasets/osm_cellids_800M
+DATA_PATH   = ../datasets/
+DATASETS    = (weblogs_714M books_800M osm_cellids_800M)
 
 CXX			= g++ -std=c++17 -Wall
 INCLUDES	= -I .
@@ -38,13 +37,13 @@ TARGETS 	= main
 .PHONY: all run clean cleanall
 .SUFFIXES: .cpp
 
-%: %.cpp index.hpp
+%: %.cpp index.hpp index2.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTFLAGS) -o $@ $< $(LDFLAGS)
 
 all: $(TARGETS)
 
 run:
-	./$(TARGETS) $(DATA_PATH)
+	./$(TARGETS) $(DATA_PATH)weblogs_714M
 
 clean:
 	rm -f $(TARGETS)

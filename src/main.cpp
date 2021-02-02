@@ -5,7 +5,7 @@
 #include <random>
 #include <vector>
 
-#include "index.hpp"
+#include "index2.hpp"
 
 #ifdef __linux__
 #include <sched.h>
@@ -37,7 +37,7 @@ template <typename T> std::vector<T> read_data_binary(const std::string &path) {
         size_t size = 0;
         in.read((char *)&size, sizeof(T));
 
-        //size /= 1000;
+//        size /= 1000;
 
         std::vector<T> data(size);
         in.read((char *)data.data(), size * sizeof(T));
@@ -63,7 +63,7 @@ size_t query_time(const MyIndex &index, const std::vector<uint64_t> &queries) {
 void test(const MyIndex &index, const std::vector<uint64_t> &data, const std::string &name) {
     // Lookup test
     size_t progress = data.size() / 100;
-    for (size_t i = data.size() / 2; i < data.size(); ++i) {
+    for (size_t i = 0; i < data.size(); ++i) {
         if (i % progress == 0)
             std::cout << "Lookup: " << i / progress << "%" << std::endl;
 
@@ -77,6 +77,7 @@ void test(const MyIndex &index, const std::vector<uint64_t> &data, const std::st
             exit(EXIT_FAILURE);
         }
     }
+    std::cout << "End lookup" << std::endl;
 
     // nextGEQ test
     std::uniform_int_distribution<uint64_t> distribution(data.front(), data.back() - 2);
@@ -107,6 +108,7 @@ int main(int argc, char **argv) {
         auto name = path.substr(path.find_last_of("/\\") + 1);
         auto data = read_data_binary<uint64_t>(path);
 //        std::vector<uint64_t> data = {1, 4, 7, 18, 24, 26, 30, 31, 31, 50, 51};
+//        std::vector<uint64_t> data = {1, 2, 3, 8, 9, 28, 30, 32, 36};
 
         std::cout << "Creating index" << std::endl;
         MyIndex index(data);
