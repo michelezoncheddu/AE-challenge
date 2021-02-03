@@ -5,7 +5,7 @@
 #include <random>
 #include <vector>
 
-#include "index2.hpp"
+#include "index_interp_search.hpp"
 
 #ifdef __linux__
 #include <sched.h>
@@ -29,6 +29,11 @@ void set_affinity() {}
 void reset_affinity() {}
 #endif
 
+/* Test vectors.
+std::vector<uint64_t> data = {1, 4, 7, 18, 24, 26, 30, 31, 31, 50, 51};
+std::vector<uint64_t> data = {1, 2, 3, 8, 9, 28, 30, 32, 36};
+*/
+
 template <typename T> std::vector<T> read_data_binary(const std::string &path) {
     try {
         std::fstream in(path, std::ios::in | std::ios::binary);
@@ -36,8 +41,6 @@ template <typename T> std::vector<T> read_data_binary(const std::string &path) {
 
         size_t size = 0;
         in.read((char *)&size, sizeof(T));
-
-//        size /= 1000;
 
         std::vector<T> data(size);
         in.read((char *)data.data(), size * sizeof(T));
@@ -107,24 +110,13 @@ int main(int argc, char **argv) {
         auto path = std::string(argv[argi]);
         auto name = path.substr(path.find_last_of("/\\") + 1);
         auto data = read_data_binary<uint64_t>(path);
-//        std::vector<uint64_t> data = {1, 4, 7, 18, 24, 26, 30, 31, 31, 50, 51};
-//        std::vector<uint64_t> data = {1, 2, 3, 8, 9, 28, 30, 32, 36};
 
         std::cout << "Creating index" << std::endl;
         MyIndex index(data);
         std::cout << "Index ready, " << index.size_in_bytes() << std::endl;
 
-//        uint64_t input;
-//        while (true) {
-//            std::cin >> input;
-//            std::cout << index.nextGEQ(input) << std::endl;
-//        }
-//        return 0;
-
         set_affinity();
         test(index, data, name);
-
-        return 0;
 
         // Benchmark
         std::vector<uint64_t> queries(10000000);

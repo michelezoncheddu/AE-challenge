@@ -37,7 +37,7 @@ TARGETS 	= main
 .PHONY: all run clean cleanall
 .SUFFIXES: .cpp
 
-%: %.cpp index.hpp index2.hpp
+%: %.cpp index_elias_fano.hpp index_interp_search.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTFLAGS) -o $@ $< $(LDFLAGS)
 
 all: $(TARGETS)
