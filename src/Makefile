@@ -23,7 +23,7 @@
 # ---------------------------------------------------------------------------
 
 DATA_PATH   = ../datasets/
-DATASETS    = (weblogs_714M books_800M osm_cellids_800M)
+DATASETS    = weblogs_714M books_800M osm_cellids_800M
 
 CXX			= g++ -std=c++17 -Wall
 INCLUDES	= -I .
@@ -43,7 +43,7 @@ TARGETS 	= main
 all: $(TARGETS)
 
 run:
-	./$(TARGETS) $(DATA_PATH)weblogs_714M
+	./$(TARGETS) $(DATA_PATH)$(word $(i), $(DATASETS))
 
 clean:
 	rm -f $(TARGETS)
